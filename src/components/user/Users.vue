@@ -34,8 +34,8 @@
             </template>
           </el-table-column>
           <el-table-column label="操作" width="180px">
-            <template>
-              <el-button type="primary" icon="el-icon-edit" size="mini"></el-button>
+            <template slot-scope="scope">
+              <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.id)"></el-button>
               <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
               <el-tooltip effect="dark" content="分配角色" placement="top" :enterable="false">
                 <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
@@ -56,11 +56,9 @@
       ></el-pagination>
     </el-card>
     <!-- 添加用户 -->
-    <el-dialog title="添加用户" :visible.sync="addDialogVisible" width="50%" 
-    @close="addDialogClose">
+    <el-dialog title="添加用户" :visible.sync="addDialogVisible" width="50%" @close="addDialogClose">
       <!-- 内容主题区域 -->
-      <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="70px"
-      >
+      <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="70px">
         <el-form-item label="用户名" prop="username">
           <el-input v-model="addForm.username"></el-input>
         </el-form-item>
@@ -78,6 +76,14 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="addDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="addUser">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 修改用户 -->
+    <el-dialog title="修改用户" :visible.sync="editDialogVisible" width="50%" >
+      <span>这是一段信息</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="editDialogVisible = false">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -108,13 +114,16 @@ export default {
       },
       userlist: [],
       total: 0,
+      //控制添加用户对话框的显示与隐藏
       addDialogVisible: false,
+      //添加用户的表单数据
       addForm: {
         username: '',
         password: '',
         email: '',
         mobile: ''
       },
+      //添加表单的验证规则对象
       addFormRules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -132,7 +141,9 @@ export default {
           { required: true, message: '请输入手机', trigger: 'blur' },
           { validator: checkMobile, trigger: 'blur' }
         ]
-      }
+      },
+      //控制修改用户对话框的显示与隐藏
+      editDialogVisible:false
     };
   },
   created() {
@@ -149,16 +160,19 @@ export default {
       this.total = res.data.total;
       console.log(res);
     },
+    //监听pagesize改变的事件
     handleSizeChange(newSize) {
       console.log(newSize);
       this.queryInfo.pagesize = newSize;
       this.getUserList();
     },
+    //监听页码值改变的事件
     handleCurrentChange(newPage) {
       console.log(newPage);
       this.queryInfo.pagenum = newPage;
       this.getUserList();
     },
+    //监听switch开关状态的事件
     async userStateChanged(userinfo) {
       console.log(userinfo);
       const { data: res } = await this.$http.put(
@@ -170,20 +184,28 @@ export default {
       }
       this.$message.success('更新成功');
     },
-    addDialogClose(){
-        this.$refs.addFormRef.resetFields()
+    //监听添加用户对话框的关闭的事件
+    addDialogClose() {
+      this.$refs.addFormRef.resetFields();
     },
-    addUser(){
-        this.$refs.addFormRef.validate(async valid =>{
-            console.log(valid)
-            if(!valid) return
-            //可以发起添加用户的请求
-            const {data:res} = await this.$http.post('users',this.addForm)
-            if(res.meta.status!=201) this.$message.error('添加用户失败')
-            this.$message.success('添加用户成功')
-            this.addDialogVisible=false
-            this.getUserList()
-        })
+    //点击按钮，添加新用户
+    addUser() {
+      this.$refs.addFormRef.validate(async valid => {
+        console.log(valid);
+        if (!valid) return;
+        //可以发起添加用户的请求
+        const { data: res } = await this.$http.post('users', this.addForm);
+        if (res.meta.status != 201) this.$message.error('添加用户失败');
+        this.$message.success('添加用户成功');
+        this.addDialogVisible = false;
+        this.getUserList();
+      });
+    },
+    //展示编辑用户的对话框
+    showEditDialog(id) {
+      console.log(id) 
+      
+      this.editDialogVisible = true;
     }
   }
 };
