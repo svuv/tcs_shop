@@ -53,7 +53,7 @@
                       type="warning"
                       closable
                       @close="removeRightById(scope.row,item3.id)"
-                    >{{item2.authName}}</el-tag>
+                    >{{item3.authName}}</el-tag>
                   </el-col>
                 </el-row>
               </el-col>
