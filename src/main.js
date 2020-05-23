@@ -14,6 +14,10 @@ axios.interceptors.request.use(config => {
   config.headers.Authorization=window.sessionStorage.getItem('token')
   return config
 })
+
+import _ from 'lodash'
+Vue.prototype._=_
+
 Vue.prototype.$http = axios
 
 Vue.config.productionTip = false 

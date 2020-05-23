@@ -71,7 +71,12 @@
               icon="el-icon-edit"
               @click="showEditDialog(scope.row.id)"
             >编辑</el-button>
-            <el-button size="mini" type="danger" icon="el-icon-delete" @click="removeRoleById(scope.row.id)">删除</el-button>
+            <el-button
+              size="mini"
+              type="danger"
+              icon="el-icon-delete"
+              @click="removeRoleById(scope.row.id)"
+            >删除</el-button>
             <el-button
               size="mini"
               type="warning"
@@ -242,6 +247,8 @@ export default {
       if (res.meta.status !== 200) {
         return this.$message.error('获取权限数据失败！');
       }
+
+      
       this.rightslist = res.data;
       console.log(this.rightslist);
 
@@ -361,7 +368,7 @@ export default {
       }
       this.$message.success('删除角色信息成功！');
       this.getRolesList();
-    },
+    }
   }
 };
 </script>
