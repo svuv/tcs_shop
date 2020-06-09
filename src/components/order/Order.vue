@@ -1,11 +1,14 @@
 <template>
   <div>
+
+    <Bread :data="['订单管理','订单列表']"></Bread>
+    
     <!-- 面包屑导航区 -->
-    <el-breadcrumb separator-class="el-icon-arrow-right">
+    <!-- <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>订单管理</el-breadcrumb-item>
       <el-breadcrumb-item>订单列表</el-breadcrumb-item>
-    </el-breadcrumb>
+    </el-breadcrumb> -->
 
     <!-- 卡片视图区域 -->
     <el-card>
@@ -92,7 +95,11 @@
 
 <script>
 import cityData from './citydata.js';
+import Bread from '../Bread'
 export default {
+  components:{
+    Bread
+  },
   data() {
     return {
       queryInfo: {
